@@ -2,8 +2,11 @@ package org.geektimes.projects.user.repository;
 
 import org.geektimes.projects.user.domain.User;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 内存型 {@link UserRepository} 实现
@@ -13,9 +16,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class InMemoryUserRepository implements UserRepository {
 
     private Map<Long, User> repository = new ConcurrentHashMap<>();
+    
+    private AtomicLong userId = new AtomicLong();
 
     @Override
     public boolean save(User user) {
+        user.setId(userId.decrementAndGet());
         return repository.put(user.getId(), user) == null;
     }
 

@@ -8,8 +8,15 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,8 +49,17 @@ public class DatabaseUserRepository implements UserRepository {
     }
 
     @Override
-    public boolean save(User user) {
-        return false;
+    public boolean save(User user) throws SQLException {
+        
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(INSERT_USER_DML_SQL);
+        statement.setString(1,user.getName());
+        statement.setString(2,user.getPassword());
+        statement.setString(3,user.getEmail());
+        statement.setString(4,user.getPhoneNumber());
+        statement.execute();
+        connection.close();
+        return true;
     }
 
     @Override
