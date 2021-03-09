@@ -60,6 +60,8 @@
                         <configuration>
                             <!-- ServletContext 路径 -->
                             <path>/</path>
+<!--                            开启JNDI-->
+                            <enableNaming>true</enableNaming>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,9 +1,12 @@
 package org.geektimes.projects.user.repository;
 
 import org.geektimes.function.ThrowableFunction;
+import org.geektimes.projects.user.context.ComponentContext;
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.sql.DBConnectionManager;
 
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -38,27 +41,38 @@ public class DatabaseUserRepository implements UserRepository {
 
     public static final String QUERY_ALL_USERS_DML_SQL = "SELECT id,name,password,email,phoneNumber FROM users";
 
-    private final DBConnectionManager dbConnectionManager;
-
-    public DatabaseUserRepository(DBConnectionManager dbConnectionManager) {
-        this.dbConnectionManager = dbConnectionManager;
+    
+    
+    public DatabaseUserRepository() {
     }
-
-    private Connection getConnection() {
-        return dbConnectionManager.getConnection();
+    
+    private Connection getConnection()  {
+        Connection connection=null;
+        try {
+            DataSource dataSource = ComponentContext.getInstance().getComponent("jdbc/UserPlatformDB");
+            connection=dataSource.getConnection();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return connection;
     }
 
     @Override
-    public boolean save(User user) throws SQLException {
+    public boolean save(User user)  {
         
-        Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(INSERT_USER_DML_SQL);
-        statement.setString(1,user.getName());
-        statement.setString(2,user.getPassword());
-        statement.setString(3,user.getEmail());
-        statement.setString(4,user.getPhoneNumber());
-        statement.execute();
-        connection.close();
+        Connection connection=getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement(INSERT_USER_DML_SQL);
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getEmail());
+            statement.setString(4, user.getPhoneNumber());
+            statement.execute();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         return true;
     }
 

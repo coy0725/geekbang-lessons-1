@@ -1,7 +1,12 @@
 package org.geektimes.projects.user.sql;
 
+import org.geektimes.projects.user.context.ComponentContext;
 import org.geektimes.projects.user.domain.User;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -14,18 +19,42 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBConnectionManager {
-
+    public DBConnectionManager() {
+    }
+    
+    /**
+     * 怎么注入？ 通过Listener和Servlet
+     */
+    
+    Logger log = Logger.getLogger(DBConnectionManager.class.getSimpleName());
     private Connection connection;
+    public Connection getConnection() {
+        ComponentContext context=ComponentContext.getInstance();
+        Connection connection = null;
+        try {
+            // Look up our data source
+            DataSource ds =  context.getComponent("jdbc/UserPlatformDB");
+            connection = ds.getConnection();
+            
+        } catch (SQLException e) {
+            log.log(Level.SEVERE,e.getMessage(),e);
+            
+        }
+        if (connection != null) {
+            log.log(Level.FINE,"获取 JNDI 数据库连接成功！");
+        }
+        return connection;
+    }
 
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
 
-    public Connection getConnection() {
-        return this.connection;
-    }
+   
     
     public DBConnectionManager(Connection connection) {
         this.connection = connection;
@@ -57,7 +86,21 @@ public class DBConnectionManager {
             "('C','******','c@gmail.com','3') , " +
             "('D','******','d@gmail.com','4') , " +
             "('E','******','e@gmail.com','5')";
+    
+    public void initDateBase(Connection connection){
+        try {
+            Statement statement = connection.createStatement();
+    
 
+            System.out.println(statement.execute(CREATE_USERS_TABLE_DDL_SQL)); // false
+            System.out.println(statement.executeUpdate(INSERT_USER_DML_SQL));  // 5
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
 
     public static void main(String[] args) throws Exception {
 //        通过 ClassLoader 加载 java.sql.DriverManager -> static 模块 {}
@@ -75,8 +118,6 @@ public class DBConnectionManager {
         // 创建 users 表
         System.out.println(statement.execute(CREATE_USERS_TABLE_DDL_SQL)); // false
         System.out.println(statement.executeUpdate(INSERT_USER_DML_SQL));  // 5
-        // 删除 users 表
-//        System.out.println(statement.execute(DROP_USERS_TABLE_DDL_SQL)); // false
 
         // 执行查询语句（DML）
         ResultSet resultSet = statement.executeQuery("SELECT id,name,password,email,phoneNumber FROM users");

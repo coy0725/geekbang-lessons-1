@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
      * @return 成功返回<code>true</code>
      */
     @Override
-    public boolean register(User user) throws SQLException {
+    public boolean register(User user)  {
         return userRepository.save(user);
     }
     
