@@ -10,9 +10,9 @@
         <listener-class>org.geektimes.projects.user.web.listener.ComponentContextInitializerListener</listener-class>
     </listener>
 
-    <listener>
-        <listener-class>org.geektimes.projects.user.web.listener.TestingListener</listener-class>
-    </listener>
+<!--    <listener>-->
+<!--        <listener-class>org.geektimes.projects.user.web.listener.TestingListener</listener-class>-->
+<!--    </listener>-->
 
     <servlet>
         <servlet-name>default</servlet-name>
@@ -105,6 +105,13 @@
         <description>DBConnectionManager</description>
         <res-ref-name>bean/DBConnectionManager</res-ref-name>
         <res-type>org.geektimes.projects.user.sql.DBConnectionManager</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+
+    <resource-ref>
+        <description>EntityManager</description>
+        <res-ref-name>bean/EntityManager</res-ref-name>
+        <res-type>org.geektimes.projects.user.orm.jpa.DelegatingEntityManager</res-type>
         <res-auth>Container</res-auth>
     </resource-ref>
 

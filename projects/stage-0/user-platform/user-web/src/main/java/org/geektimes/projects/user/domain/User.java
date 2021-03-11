@@ -27,8 +27,8 @@ public class User implements Serializable {
     private String name;
 
     @Column
-    @Max(32)
-    @Min(6)
+//    @Max(32)
+//    @Min(6)
     private String password;
 
     @Column
@@ -79,8 +79,12 @@ public class User implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         User user = (User) o;
         return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(phoneNumber, user.phoneNumber);
     }

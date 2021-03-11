@@ -1,11 +1,16 @@
 package org.geektimes.projects.user.repository;
 
 import org.geektimes.function.ThrowableFunction;
-import org.geektimes.projects.user.context.ComponentContext;
+import org.geektimes.context.ComponentContext ;
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.sql.DBConnectionManager;
 
+import javax.annotation.Resource;
 import javax.naming.NamingException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -29,7 +34,9 @@ import static org.apache.commons.lang.ClassUtils.wrapperToPrimitive;
 public class DatabaseUserRepository implements UserRepository {
 
     private static Logger logger = Logger.getLogger(DatabaseUserRepository.class.getName());
-
+    
+//    @Resource(name = "bean/EntityManager")
+//    private EntityManager entityManager;
     /**
      * 通用处理方式
      */
@@ -59,7 +66,19 @@ public class DatabaseUserRepository implements UserRepository {
 
     @Override
     public boolean save(User user)  {
-        
+    
+        return jpaSave(user);
+    }
+    private boolean jpaSave(User user){
+        EntityManager entityManager=ComponentContext.getInstance().getComponent("bean/EntityManager");
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        entityManager.persist(user);
+        transaction.commit();
+        return true;
+    }
+    
+    private boolean jdbcSave(User user) {
         Connection connection=getConnection();
         try {
             PreparedStatement statement = connection.prepareStatement(INSERT_USER_DML_SQL);
@@ -75,7 +94,7 @@ public class DatabaseUserRepository implements UserRepository {
         
         return true;
     }
-
+    
     @Override
     public boolean deleteById(Long userId) {
         return false;

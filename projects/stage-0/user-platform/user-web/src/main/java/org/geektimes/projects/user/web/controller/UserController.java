@@ -22,9 +22,9 @@ import java.sql.SQLException;
  **/
 @Path("/user")
 public class UserController implements PageController {
-    private String databaseUrl = "jdbc:derby:db/user-platform;create=true";
-    private Connection connection = DriverManager.getConnection(databaseUrl);
-    private DBConnectionManager connectionManager = new DBConnectionManager(connection);
+//    private String databaseUrl = "jdbc:derby:db/user-platform;create=true";
+//    private Connection connection = DriverManager.getConnection(databaseUrl);
+//    private DBConnectionManager connectionManager = new DBConnectionManager(connection);
     private UserService userService = new UserServiceImpl(new DatabaseUserRepository());
     
     public UserController() throws SQLException {
