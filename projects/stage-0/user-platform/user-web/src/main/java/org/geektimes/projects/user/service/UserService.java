@@ -1,8 +1,7 @@
 package org.geektimes.projects.user.service;
 
 import org.geektimes.projects.user.domain.User;
-
-import java.sql.SQLException;
+import org.geektimes.projects.user.sql.LocalTransactional;
 
 /**
  * 用户服务
@@ -15,7 +14,8 @@ public interface UserService {
      * @param user 用户对象
      * @return 成功返回<code>true</code>
      */
-    boolean register(User user) throws SQLException;
+    @LocalTransactional
+    boolean register(User user);
 
     /**
      * 注销用户
