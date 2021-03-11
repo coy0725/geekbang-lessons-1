@@ -1,12 +1,14 @@
 package org.geektimes.projects.user.orm.jpa;
 
-import org.apache.derby.impl.db.BasicDatabase;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.geektimes.projects.user.domain.User;
 
 import javax.annotation.Resource;
-import javax.persistence.*;
-import javax.persistence.spi.PersistenceProvider;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,7 @@ public class JpaDemo {
                 Persistence.createEntityManagerFactory("emf", getProperties());
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         User user = new User();
+//        user.setId(1L);
         user.setName("小马哥");
         user.setPassword("******");
         user.setEmail("mercyblitz@gmail.com");
