@@ -75,6 +75,7 @@ public class UserManager implements UserManagerMBean {
         return user.toString();
     }
 
+    @Override
     public User getUser() {
         return user;
     }

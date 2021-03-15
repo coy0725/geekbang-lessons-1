@@ -2,7 +2,12 @@ package org.geektimes.projects.user.web.listener;
 
 import org.geektimes.context.ComponentContext ;
 import org.geektimes.projects.user.sql.DBConnectionManager;
+import org.geektimes.context.ComponentContext;
+import org.geektimes.projects.user.domain.User;
+import org.geektimes.projects.user.management.UserManager;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -13,6 +18,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.lang.management.ManagementFactory;
 
 /**
  * {@link  ComponentContext} 初始化器
@@ -29,7 +35,24 @@ public class ComponentContextInitializerListener implements ServletContextListen
         ComponentContext context = new ComponentContext();
         this.servletContext = sce.getServletContext();
         context.init(servletContext);
-        servletContext.setAttribute(ComponentContext.CONTEXT_NAME,context);
+        initJmx();
+    }
+    
+    private void initJmx() {
+        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        ObjectName objectName;
+        try {
+            objectName = new ObjectName("org.geektimes.projects.user.management:type=User");
+            User user = new User();
+            mBeanServer.registerMBean(createUserMBean(user), objectName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private  Object createUserMBean(User user) throws Exception {
+        return new UserManager(user);
+//        servletContext.setAttribute(ComponentContext.CONTEXT_NAME,context);
 //        initDateBase();
     }
     
@@ -67,6 +90,7 @@ public class ComponentContextInitializerListener implements ServletContextListen
         }
         return connection;
     }
+    
     
     
     
