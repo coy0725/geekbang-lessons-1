@@ -40,6 +40,11 @@
         </dependency>
 
         <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
             <version>10.3.1.4</version>
@@ -74,7 +79,11 @@
             <version>5.1.0.Final</version>
         </dependency>
 
-<!--        3.0.1-b11-->
+        <dependency>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
+        </dependency>
+
 
     </dependencies>
 
