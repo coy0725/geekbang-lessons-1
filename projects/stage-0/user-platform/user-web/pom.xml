@@ -78,6 +78,7 @@
             <artifactId>hibernate-validator</artifactId>
             <version>5.1.0.Final</version>
         </dependency>
+<!--        https://jolokia.org/reference/html/agents.html#agent-war-programmatic-->
         <dependency>
             <groupId>org.jolokia</groupId>
             <artifactId>jolokia-core</artifactId>
