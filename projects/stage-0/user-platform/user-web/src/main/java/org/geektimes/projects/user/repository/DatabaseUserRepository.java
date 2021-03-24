@@ -1,30 +1,16 @@
 package org.geektimes.projects.user.repository;
 
 import org.geektimes.function.ThrowableFunction;
-import org.geektimes.context.ComponentContext ;
+import org.geektimes.context.ClassicComponentContext;
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.sql.DBConnectionManager;
 
-import javax.annotation.Resource;
-import javax.naming.NamingException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import javax.sql.DataSource;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.*;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,9 +20,7 @@ import static org.apache.commons.lang.ClassUtils.wrapperToPrimitive;
 public class DatabaseUserRepository implements UserRepository {
 
     private static Logger logger = Logger.getLogger(DatabaseUserRepository.class.getName());
-    
-//    @Resource(name = "bean/EntityManager")
-//    private EntityManager entityManager;
+
     /**
      * 通用处理方式
      */
@@ -51,6 +35,7 @@ public class DatabaseUserRepository implements UserRepository {
     
     
     public DatabaseUserRepository() {
+        this.dbConnectionManager = ClassicComponentContext.getInstance().getComponent("bean/DBConnectionManager");
     }
     
     private Connection getConnection()  {
