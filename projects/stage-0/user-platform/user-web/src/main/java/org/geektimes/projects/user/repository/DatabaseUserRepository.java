@@ -5,6 +5,9 @@ import org.geektimes.context.ClassicComponentContext;
 import org.geektimes.projects.user.domain.User;
 import org.geektimes.projects.user.sql.DBConnectionManager;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.sql.DataSource;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -31,7 +34,7 @@ public class DatabaseUserRepository implements UserRepository {
                     "(?,?,?,?)";
 
     public static final String QUERY_ALL_USERS_DML_SQL = "SELECT id,name,password,email,phoneNumber FROM users";
-
+    private final DBConnectionManager dbConnectionManager;
     
     
     public DatabaseUserRepository() {
@@ -41,7 +44,7 @@ public class DatabaseUserRepository implements UserRepository {
     private Connection getConnection()  {
         Connection connection=null;
         try {
-            DataSource dataSource = ComponentContext.getInstance().getComponent("jdbc/UserPlatformDB");
+            DataSource dataSource = ClassicComponentContext.getInstance().getComponent("jdbc/UserPlatformDB");
             connection=dataSource.getConnection();
         }catch (Exception e){
             e.printStackTrace();
@@ -55,7 +58,7 @@ public class DatabaseUserRepository implements UserRepository {
         return jpaSave(user);
     }
     private boolean jpaSave(User user){
-        EntityManager entityManager=ComponentContext.getInstance().getComponent("bean/EntityManager");
+        EntityManager entityManager=ClassicComponentContext.getInstance().getComponent("bean/EntityManager");
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
         entityManager.persist(user);
