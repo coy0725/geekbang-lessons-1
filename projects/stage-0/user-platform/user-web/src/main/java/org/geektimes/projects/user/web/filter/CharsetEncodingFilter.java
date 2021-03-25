@@ -13,6 +13,8 @@ public class CharsetEncodingFilter implements Filter {
     private String encoding = null;
 
     private ServletContext servletContext;
+    
+    
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
