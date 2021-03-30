@@ -26,15 +26,15 @@ public class DefaultPublisher<T> implements Publisher<T> {
 //                    SubscriberWrapper.class.cast(subscriber);
 
             DefaultSubscription subscription = subscriberWrapper.getSubscription();
-
+            // 继续发送
+            subscriber.onNext(data);
             // 判断当前 subscriber 是否 cancel 数据发送
             if (subscription.isCanceled()) {
                 System.err.println("本次数据发布已忽略，数据为：" + data);
                 return;
             }
 
-            // 继续发送
-            subscriber.onNext(data);
+            
         });
     }
 
