@@ -102,6 +102,11 @@
             <version>1.2.3</version>
         </dependency>
 
+        <!-- ActiveMQ -->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
