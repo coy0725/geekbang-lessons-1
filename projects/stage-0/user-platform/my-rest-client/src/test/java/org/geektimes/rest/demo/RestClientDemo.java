@@ -9,7 +9,7 @@ public class RestClientDemo {
     public static void main(String[] args) {
         Client client = ClientBuilder.newClient();
         Response response = client
-                .target("http://127.0.0.1:8080/hello/world")      // WebTarget
+                .target("http://127.0.0.1:8079/hello")      // WebTarget
                 .request() // Invocation.Builder
                 .get();                                     //  Response
 
