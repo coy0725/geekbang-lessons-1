@@ -32,6 +32,17 @@ public class DefaultRuntimeDelegate extends RuntimeDelegate {
     @Override
     public <T> HeaderDelegate<T> createHeaderDelegate(Class<T> type) throws IllegalArgumentException {
         return null;
+//        return new HeaderDelegate<T>() {
+//            @Override
+//            public T fromString(String value) {
+//                return (T) MediaType.APPLICATION_JSON_TYPE;
+//            }
+//
+//            @Override
+//            public String toString(T value) {
+//                return null;
+//            }
+//        };
     }
 
     @Override

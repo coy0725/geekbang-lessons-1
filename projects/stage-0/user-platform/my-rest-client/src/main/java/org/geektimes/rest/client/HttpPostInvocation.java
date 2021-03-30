@@ -16,19 +16,24 @@
  */
 package org.geektimes.rest.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.geektimes.rest.core.DefaultResponse;
 
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.InvocationCallback;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -46,10 +51,13 @@ class HttpPostInvocation implements Invocation {
     private final URL url;
 
     private final MultivaluedMap<String, Object> headers;
+    
+    private final Entity<?> entity;
 
-    HttpPostInvocation(URI uri, MultivaluedMap<String, Object> headers) {
+    HttpPostInvocation(URI uri, MultivaluedMap<String, Object> headers, Entity<?> entity) {
         this.uri = uri;
         this.headers = headers;
+        this.entity = entity;
         try {
             this.url = uri.toURL();
         } catch (MalformedURLException e) {
@@ -70,6 +78,12 @@ class HttpPostInvocation implements Invocation {
             connection.setRequestMethod(HttpMethod.POST);
             setRequestHeaders(connection);
             // TODO Set the cookies
+ 
+            connection.setDoOutput(true);
+            OutputStream outputStream = connection.getOutputStream();
+            OutputStreamWriter writer=new OutputStreamWriter(outputStream, "UTF-8");
+            writer.write(entity.getEntity().toString());
+            writer.flush();
             int statusCode = connection.getResponseCode();
 //            Response.ResponseBuilder responseBuilder = Response.status(statusCode);
 //
@@ -88,6 +102,7 @@ class HttpPostInvocation implements Invocation {
 //            }
 
         } catch (IOException e) {
+            e.printStackTrace();
             // TODO Error handler
         }
         return null;
@@ -100,6 +115,7 @@ class HttpPostInvocation implements Invocation {
                 connection.setRequestProperty(headerName, headerValue.toString());
             }
         }
+//        connection.setRequestProperty("Content-Type","application/json; charset=utf-8");
     }
 
     @Override
