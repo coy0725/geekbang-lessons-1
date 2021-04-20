@@ -19,7 +19,7 @@ public class RepositoriesController {
 	@Autowired
 	private ConnectionRepository connectionRepository;
 
-	@GetMapping("/repositories")
+	@GetMapping()
 	public String repositories(Model model) {
 		if (connectionRepository.findPrimaryConnection(GitHub.class) == null) {
 			return "redirect:/connect/github";
