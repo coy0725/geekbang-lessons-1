@@ -22,6 +22,7 @@
         <module>user-data</module>
         <module>my-commons</module>
         <module>my-session</module>
+        <module>consistence-hash</module>
     </modules>
 
     <properties>
