@@ -16,23 +16,12 @@ public abstract class MapBasedConfigSource implements ConfigSource {
 
     private final int ordinal;
 
-    private Map<String, String> source;
-    
-    private boolean lazyLoad;
+    private final Map<String, String> configData;
 
     protected MapBasedConfigSource(String name, int ordinal) {
-        this(name, ordinal, false);
-    }
-    protected MapBasedConfigSource(String name, int ordinal,boolean lazyLoad) {
         this.name = name;
         this.ordinal = ordinal;
-        this.lazyLoad=lazyLoad;
-        if (!lazyLoad){
-            this.source = getProperties();
-        }else {
-            this.source=null;
-        }
-        
+        this.configData = new HashMap<>();
     }
 
     /**
@@ -40,19 +29,25 @@ public abstract class MapBasedConfigSource implements ConfigSource {
      *
      * @return 不可变 Map 类型的配置数据
      */
-    @Override
     public final Map<String, String> getProperties() {
-        Map<String,String> configData = new HashMap<>();
-        try {
-            prepareConfigData(configData);
-        } catch (Throwable cause) {
-            throw new IllegalStateException("准备配置数据发生错误",cause);
-        }
-        return Collections.unmodifiableMap(configData);
+        return Collections.unmodifiableMap(getConfigData());
     }
+
+    protected Map<String, String> getConfigData() {
+        try {
+            if (configData.isEmpty()) {
+                prepareConfigData(configData);
+            }
+        } catch (Throwable cause) {
+            throw new IllegalStateException("准备配置数据发生错误", cause);
+        }
+        return configData;
+    }
+
 
     /**
      * 准备配置数据
+     *
      * @param configData
      * @throws Throwable
      */
@@ -70,18 +65,12 @@ public abstract class MapBasedConfigSource implements ConfigSource {
 
     @Override
     public Set<String> getPropertyNames() {
-        if (null == source) {
-            source=getProperties();
-        }
-        return source.keySet();
+        return configData.keySet();
     }
 
     @Override
     public String getValue(String propertyName) {
-        if (null == source) {
-            source=getProperties();
-        }
-        return source.get(propertyName);
+        return getConfigData().get(propertyName);
     }
 
 }
